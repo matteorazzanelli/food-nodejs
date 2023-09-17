@@ -1,14 +1,25 @@
+const express = require('express');
+const router = express.Router();
 
-let products = module.exports = {}
+// load product controller
+const productController = require('../controllers/product-controller');
 
-products.index = (req, res) => {
+//middleware to handle req.body
+router.use(express.json());
+
+router.get('/', (req, res)=>{
   console.log('get all products');
-}
+  productController.listProducts();
+})
 
-products.show = (req, res) => {
-  console.log('get '+req.params.id+' product');
-}
+router.get('/:id',(req, res)=>{
+  console.log('get product : '+req.params.id);
+  productController.findProduct(req.params.id);
+})
 
-products.create = (req, res, next) => {
+router.post('/', (req,res)=>{
   console.log('create product : '+req.body)
-}
+  productController.addProduct(req.body);
+})
+
+module.exports = router;

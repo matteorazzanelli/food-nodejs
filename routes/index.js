@@ -1,18 +1,13 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
 
-const products = require('./product-routes')
-const users = require('./user-routes')
+const productRoutes = require('./product-routes');
+const userRoutes = require('./user-routes');
 
+// using specific routes middleware for products and users
 router
-  .get('/products', products.index)
-  .get('/products/:id', products.show)
-  .post('/products', products.create)
+  .get('/', ()=>{console.log('-------->HOME<----------')})
+  .use('/products', productRoutes)
+  .use('/users', userRoutes);
 
-router
-  .get('/users', users.index)
-  .get('/users/:id', users.show)
-  .post('/users', users.create)
-  
-
-module.exports = router
+module.exports = router;
