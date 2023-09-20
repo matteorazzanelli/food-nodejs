@@ -2,9 +2,6 @@
 const express = require('express');
 const app = express();
 
-// load database configuration
-let dbConfig = require('./config').dbConfig;
-
 // load routes
 const routes = require('./routes');
 app.use(routes);
