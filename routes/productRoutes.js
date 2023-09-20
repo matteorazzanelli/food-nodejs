@@ -1,8 +1,8 @@
 const express = require('express');
+const { productController } = require('../controllers/productController');
 const router = express.Router();
 
 // load product controller
-const productController = require('../controllers/productController');
 
 //middleware to handle req.body
 router.use(express.json());
