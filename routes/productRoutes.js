@@ -2,24 +2,24 @@ const express = require('express');
 const router = express.Router();
 
 // load product controller
-const userController = require('../controllers/user-controller');
+const productController = require('../controllers/productController');
 
 //middleware to handle req.body
 router.use(express.json());
 
 router.get('/', (req, res)=>{
-  console.log('get all users');
-  userController.listUsers();
+  console.log('get all products');
+  return productController.listProducts(req, res);
 })
 
 router.get('/:id',(req, res)=>{
   console.log('get product : '+req.params.id);
-  userController.findUser(req.params.id);
+  productController.findProduct(req.params.id);
 })
 
 router.post('/', (req,res)=>{
-  console.log('create user : '+req.body);
-  userController.addUser(req.body);
+  console.log('create product : '+req.body)
+  productController.addProduct(req.body);
 })
 
 module.exports = router;

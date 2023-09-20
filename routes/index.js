@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-const productRoutes = require('./product-routes');
-const userRoutes = require('./user-routes');
+const productRoutes = require('./productRoutes');
+const userRoutes = require('./userRoutes');
 
 // using specific routes middleware for products and users
 router
