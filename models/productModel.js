@@ -17,6 +17,18 @@ class ProductModel extends GeneralModel {
     }
     return this.queryResult; 
   }
+
+  async update(id, content){
+    // use a prepared statement
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.execute(
+        'UPDATE products SET `name` = ? WHERE `id` = ?', [content, id]));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
+    }
+    return this.queryResult;
   }
 }
 

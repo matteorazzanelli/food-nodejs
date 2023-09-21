@@ -1,25 +1,22 @@
 const express = require('express');
-const { productController } = require('../controllers/productController');
 const router = express.Router();
 
 // load product controller
+const { productController } = require('../controllers/productController');
 
 //middleware to handle req.body
 router.use(express.json());
 
 router.get('/', (req, res)=>{
   console.log('get all products');
-  return productController.listProducts(req, res);
+  return productController.listProducts(res);
 })
 
-router.get('/:id',(req, res)=>{
-  console.log('get product : '+req.params.id);
-  productController.findProduct(req.params.id);
-})
-
-router.post('/', (req,res)=>{
-  console.log('create product : '+req.body)
-  productController.addProduct(req.body);
+router.put('/:id', (req,res) => {
+  const {id} = req.params;
+  const {content} = req.body;
+  // per ogni campo del req.body modificare il campo del record
+  return productController.modifyProduct(id, content, res);
 })
 
 module.exports = router;

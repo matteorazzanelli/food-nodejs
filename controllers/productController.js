@@ -18,12 +18,13 @@ class ProductController extends GeneralController{
     return this.renderApi(res)
   }
 
-  findProduct = (val) => {
-    console.log('findProduct : ',val);
-  }
-
-  addProduct = (productInfo) => {
-    console.log('add : ',productInfo);
+  modifyProduct = async (id, content, res) => {
+    console.log('modify product');
+    const result = await pm.update(id, content);
+    this.setCode(result.rows.affectedRows>0 ? 200 : 404);
+    this.setSuccess(result.rows.affectedRows>0);
+    this.setContent(result.rows.affectedRows>0 ? result.rows : "Product not found");
+    return this.renderApi(res)
   }
 
 }
