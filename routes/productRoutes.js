@@ -23,4 +23,9 @@ router.put('/:id', (req,res) => {
   return productController.modifyProduct(id, content, res);
 })
 
+router.delete('/:id', (req,res) => {
+  const {id} = req.params;
+  return productController.deleteProduct(id, res);
+})
+
 module.exports = router;
