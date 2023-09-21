@@ -1,21 +1,20 @@
 
 // load product model
-console.log('---------------------')
 const {dbConfig} = require('../config');
 const {ProductModel} = require('../models/productModel');
+// pass db connection as constructor parameter
 const pm = new ProductModel(dbConfig);
-console.log('---------------------')
 
 const { GeneralController } = require('./generalController');
 
 class ProductController extends GeneralController{
 
-  listProducts = async (req, res) => {
-    console.log('listProducts');
+  listProducts = async (res) => {
+    console.log('list all products');
     const result = await pm.selectAll();
-    this.setCode(result.error ? 403 : 200);
+    this.setCode(!result.error ? 200 : 403);
     this.setSuccess(!result.error);
-    this.setContent(result.error ? "Access denied" : result.rows);
+    this.setContent(result.error ?? result.rows);
     return this.renderApi(res)
   }
 

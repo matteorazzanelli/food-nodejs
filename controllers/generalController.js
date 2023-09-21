@@ -1,6 +1,6 @@
 class GeneralController{
   constructor(){
-    this.statusCode = 200;
+    this.statusCode = -1;
     this.success = false;
     this.content = {};
     console.log('general controller');
