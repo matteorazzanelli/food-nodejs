@@ -7,9 +7,13 @@ const { productController } = require('../controllers/productController');
 //middleware to handle req.body
 router.use(express.json());
 
-router.get('/', (req, res)=>{
-  console.log('get all products');
+router.get('/', (req, res) => {
   return productController.listProducts(res);
+})
+
+router.post('/', (req, res) => {
+  const {content} = req.body;
+  return productController.insertProduct(content, res);
 })
 
 router.put('/:id', (req,res) => {

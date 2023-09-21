@@ -18,6 +18,15 @@ class ProductController extends GeneralController{
     return this.renderApi(res)
   }
 
+  insertProduct = async (content, res) => {
+    console.log('add product');
+    const result = await pm.insert(content);
+    this.setCode(!result.error ? 201 : 400);
+    this.setSuccess(!result.error);
+    this.setContent(result.error ?? result.rows);
+    return this.renderApi(res)
+  }
+
   modifyProduct = async (id, content, res) => {
     console.log('modify product');
     const result = await pm.update(id, content);

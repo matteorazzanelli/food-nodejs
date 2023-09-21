@@ -10,7 +10,7 @@ class ProductModel extends GeneralModel {
   async selectAll(){
     try{
       [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.query("select * from products"));
+        (await this.connection.query("SELECT * FROM products"));
     }
     catch(error){
       this.queryResult.error = error.sqlMessage;
@@ -18,8 +18,21 @@ class ProductModel extends GeneralModel {
     return this.queryResult; 
   }
 
+  async insert(content){
+    // use a prepared statement to avoid SQL injection
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.execute(
+        'INSERT INTO products (name) VALUES (?)', [content]));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
+    }
+    return this.queryResult;
+  }
+
   async update(id, content){
-    // use a prepared statement
+    // use a prepared statement to avoid SQL injection
     try{
       [this.queryResult.rows, this.queryResult.fields] = 
         (await this.connection.execute(
