@@ -7,10 +7,15 @@ class UserModel extends GeneralModel {
     console.log('construct user')
   }
 
-  selectAll(){
-    this.connection.query("select * from orders",(err, res)=>{
-      return console.log(res);
-    });
+  async selectAll(){
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.query("select * from users"));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage
+    }
+    return this.queryResult;
   }
 
 }
