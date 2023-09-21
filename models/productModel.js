@@ -8,14 +8,15 @@ class ProductModel extends GeneralModel {
   }
 
   async selectAll(){
-    let result = {rows: undefined, fields:undefined, error:undefined};
     try{
-      [result.rows, result.fields] = (await this.connection.query("select * from products"));
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.query("select * from products"));
     }
     catch(error){
-      result.error = error.sqlMessage
+      this.queryResult.error = error.sqlMessage;
     }
-    return result; 
+    return this.queryResult; 
+  }
   }
 }
 
