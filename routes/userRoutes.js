@@ -12,14 +12,21 @@ router.get('/', (req, res)=>{
   return userController.listUsers(req, res);
 })
 
-router.get('/:id',(req, res)=>{
-  console.log('get product : '+req.params.id);
-  return userController.findUser(req.params.id);
+router.post('/', (req, res) => {
+  const {content} = req.body;
+  return userController.insertUser(content, res);
 })
 
-router.post('/', (req,res)=>{
-  console.log('create user : '+req.body);
-  return userController.addUser(req.body);
+router.put('/:id', (req,res) => {
+  const {id} = req.params;
+  const {content} = req.body;
+  // per ogni campo del req.body modificare il campo del record
+  return userController.modifyUser(id, content, res);
+})
+
+router.delete('/:id', (req,res) => {
+  const {id} = req.params;
+  return userController.deleteUser(id, res);
 })
 
 module.exports = router;
