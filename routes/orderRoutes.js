@@ -4,6 +4,9 @@ const router = express.Router();
 // load order controller
 const { orderController } = require('../controllers/orderController');
 
+// load middleware
+const insertOrderMiddleware = require('../middleware/orderMiddleware');
+
 //middleware to handle req.body
 router.use(express.json());
 
@@ -11,7 +14,7 @@ router.get('/', (req, res) => {
   return orderController.listOrders(res);
 })
 
-router.post('/', (req, res) => {
+router.post('/', insertOrderMiddleware(orderController), (req, res) => {
   const {content} = req.body;
   return orderController.insertOrder(content, res);
 })
