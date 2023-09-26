@@ -19,7 +19,60 @@ class OrderModel extends GeneralModel {
     return this.queryResult; 
   }
 
-  
+  async insert(content){
+    // first check fields
+    const dateObj = new Date(content.date);
+    const userObj = content.users;
+    const productObj = content.products;
+    console.log(dateObj, userObj, productObj)
+    if(!isNaN(dateObj) && userObj.length>0 && productObj.length>0){
+      // let's add the order record with date
+      try{
+        [this.queryResult.rows, this.queryResult.fields] = 
+          (await this.connection.execute(
+          'INSERT INTO orders (date) VALUES (?)', [content.date]));
+      }
+      catch(error){
+        this.queryResult.error = error.sqlMessage;
+        return this.queryResult;
+      }
+    }
+    else{
+      this.queryResult.rows = [];
+      this.queryResult.error = "Fields must be provided."
+      return this.queryResult;
+    }
+    // if here, store the id
+    const tempId = this.queryResult.rows.insertId;
+    // for each product add a record in orders_products
+    productObj.forEach(async (product) => {
+      [this.queryResult.rows, this.queryResult.fields] = 
+          (await this.connection.execute(
+          'INSERT INTO orders_products (id_order,id_product) VALUES (?,?)',
+          [tempId, product]));
+    });
+    // for each product add a record in orders_products
+    userObj.forEach(async (user) => {
+      [this.queryResult.rows, this.queryResult.fields] = 
+          (await this.connection.execute(
+          'INSERT INTO orders_users (id_order,id_user) VALUES (?,?)',
+          [tempId, user]));
+    });
+    return this.queryResult;
+  }
+
+  async update(id, content){
+    // use a prepared statement to avoid SQL injection
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.execute(
+        'UPDATE products SET `name` = ? WHERE `id` = ?', [content, id]));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
+    }
+    return this.queryResult;
+  }
 
   async delete(id){
     // use a prepared statement to avoid SQL injection
