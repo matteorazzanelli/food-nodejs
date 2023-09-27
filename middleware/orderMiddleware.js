@@ -1,7 +1,6 @@
 const insertOrderMiddleware = (controller) => {
   return (req,res,next) => {
     const {content} = req.body;
-    console.log(content.date, !content.date, content.products)
     if(!content.date || isNaN(new Date(content.date))){
       controller.setCode(400); // bad request
       controller.setSuccess(false);
@@ -20,10 +19,8 @@ const insertOrderMiddleware = (controller) => {
       controller.setContent("Provide a valid set of products.");
       return controller.renderApi(res);
     }
-    const dateObj = new Date(content.date);
-    const userObj = content.users;
-    const productObj = content.products;
-    console.log(content);
+    // check users and products already exist in database
+
     next();
   }
 }

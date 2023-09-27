@@ -20,44 +20,36 @@ class OrderModel extends GeneralModel {
   }
 
   async insert(content){
-    // first check fields
+    // no need to check due to middleware
     const dateObj = new Date(content.date);
     const userObj = content.users;
     const productObj = content.products;
     console.log(dateObj, userObj, productObj)
-    if(!isNaN(dateObj) && userObj.length>0 && productObj.length>0){
+    try{
       // let's add the order record with date
-      try{
-        [this.queryResult.rows, this.queryResult.fields] = 
-          (await this.connection.execute(
-          'INSERT INTO orders (date) VALUES (?)', [content.date]));
-      }
-      catch(error){
-        this.queryResult.error = error.sqlMessage;
-        return this.queryResult;
-      }
+      // FIXME: this.queryResult should be the result of the entire operation
+      [this.queryResult.rows, this.queryResult.fields] = (await this.connection.execute(
+        'INSERT INTO orders (date) VALUES (?)', [content.date]));
+      // store the id
+      const tempId = this.queryResult.rows.insertId;
+      // for each product add a record in orders_products
+      productObj.forEach(async (product) => {
+        const [rows, fields] = (await this.connection.execute(
+            'INSERT INTO orders_products (id_order,id_product) VALUES (?,?)',
+            [tempId, product]));
+      });
+      // for each user add a record in orders_users
+      userObj.forEach(async (user) => {
+        const [rows, fields] = (await this.connection.execute(
+            'INSERT INTO orders_users (id_order,id_user) VALUES (?,?)',
+            [tempId, user]));
+      });
     }
-    else{
-      this.queryResult.rows = [];
-      this.queryResult.error = "Fields must be provided."
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
       return this.queryResult;
     }
-    // if here, store the id
-    const tempId = this.queryResult.rows.insertId;
-    // for each product add a record in orders_products
-    productObj.forEach(async (product) => {
-      [this.queryResult.rows, this.queryResult.fields] = 
-          (await this.connection.execute(
-          'INSERT INTO orders_products (id_order,id_product) VALUES (?,?)',
-          [tempId, product]));
-    });
-    // for each product add a record in orders_products
-    userObj.forEach(async (user) => {
-      [this.queryResult.rows, this.queryResult.fields] = 
-          (await this.connection.execute(
-          'INSERT INTO orders_users (id_order,id_user) VALUES (?,?)',
-          [tempId, user]));
-    });
+    
     return this.queryResult;
   }
 
