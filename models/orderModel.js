@@ -19,12 +19,38 @@ class OrderModel extends GeneralModel {
     return this.queryResult; 
   }
 
+  async selectProduct(id, table){
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.query(`SELECT * FROM ${table} WHERE id = ?`,[id]));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
+    }
+    return this.queryResult; 
+  }
+
+  async checkForeignKeys(array, table){
+    for(let i = 0; i < array.length; i ++){
+      const result = (await this.selectProduct(array[i], table));
+      if(result.rows.length === 0)
+        return false;
+    }
+    return true;
+  }
+
   async insert(content){
     // no need to check due to middleware
     const dateObj = new Date(content.date);
     const userObj = content.users;
     const productObj = content.products;
-    console.log(dateObj, userObj, productObj)
+    // check if products and users (i.e. foreign keys) exist
+    if(!(await this.checkForeignKeys(productObj, 'products')) || !(await this.checkForeignKeys(userObj, 'users'))){
+      this.queryResult.error = "Foreign key does not exist.";
+      return this.queryResult;
+    }
+    
+    
     try{
       // let's add the order record with date
       // FIXME: this.queryResult should be the result of the entire operation
