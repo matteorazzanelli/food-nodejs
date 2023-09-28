@@ -34,17 +34,15 @@ class GeneralModel {
   }
 
   async delete(id, table){
-    console.log(id, table)
     // use a prepared statement to avoid SQL injection
     try{
       [this.queryResult.rows, this.queryResult.fields] = 
         (await this.connection.execute(
-        `DELETE FROM ${table} WHERE 'id' = ?`, [id]));
+        `DELETE FROM ${table} WHERE id = ?`, [id]));
     }
     catch(error){
       this.queryResult.error = error.sqlMessage;
     }
-    console.log(this.queryResult)
     return this.queryResult;
   }
 
