@@ -19,7 +19,7 @@ router.post('/', insertOrderMiddleware(orderController), (req, res) => {
   return orderController.insertOrder(content, res);
 })
 
-router.put('/:id', (req,res) => {
+router.put('/:id', insertOrderMiddleware(orderController), (req,res) => {
   const {id} = req.params;
   const {content} = req.body;
   // per ogni campo del req.body modificare il campo del record
