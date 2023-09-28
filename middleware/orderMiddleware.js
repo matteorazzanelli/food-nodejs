@@ -19,8 +19,6 @@ const insertOrderMiddleware = (controller) => {
       controller.setContent("Provide a valid set of products.");
       return controller.renderApi(res);
     }
-    // check users and products already exist in database
-
     next();
   }
 }

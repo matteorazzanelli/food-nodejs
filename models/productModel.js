@@ -7,18 +7,6 @@ class ProductModel extends GeneralModel {
     console.log('construct product')
   }
 
-  async selectAll(){
-    // no need of prepared statement here
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.query("SELECT * FROM products"));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult; 
-  }
-
   async insert(content){
     // use a prepared statement to avoid SQL injection
     try{
@@ -45,18 +33,6 @@ class ProductModel extends GeneralModel {
     return this.queryResult;
   }
 
-  async delete(id){
-    // use a prepared statement to avoid SQL injection
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.execute(
-        'DELETE FROM products WHERE `id` = ?', [id]));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult;
-  }
 }
 
 module.exports = {ProductModel};

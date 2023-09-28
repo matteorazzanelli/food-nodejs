@@ -11,7 +11,7 @@ class ProductController extends GeneralController{
 
   listProducts = async (res) => {
     console.log('list all products');
-    const result = await pm.selectAll();
+    const result = await pm.selectAll('products');
     this.setCode(!result.error ? 200 : 403);
     this.setSuccess(!result.error);
     this.setContent(result.error ?? result.rows);
@@ -38,7 +38,7 @@ class ProductController extends GeneralController{
 
   deleteProduct = async (id, res) => {
     console.log('delete product : ', id);
-    const result = await pm.delete(id);
+    const result = await pm.delete(id, 'products');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
     this.setContent(result.rows.affectedRows>0 ? result.rows : "Product not found");

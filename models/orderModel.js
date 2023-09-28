@@ -7,38 +7,6 @@ class OrderModel extends GeneralModel {
     console.log('construct order')
   }
 
-  async selectAll(){
-    // no need of prepared statement here
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.query("SELECT * FROM orders"));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult; 
-  }
-
-  async selectProduct(id, table){
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.query(`SELECT * FROM ${table} WHERE id = ?`,[id]));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult; 
-  }
-
-  async checkForeignKeys(array, table){
-    for(let i = 0; i < array.length; i ++){
-      const result = (await this.selectProduct(array[i], table));
-      if(result.rows.length === 0)
-        return false;
-    }
-    return true;
-  }
-
   async insert(content){
     // no need to check due to middleware
     const dateObj = new Date(content.date);
@@ -92,18 +60,7 @@ class OrderModel extends GeneralModel {
     return this.queryResult;
   }
 
-  async delete(id){
-    // use a prepared statement to avoid SQL injection
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.execute(
-        'DELETE FROM orders WHERE `id` = ?', [id]));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult;
-  }
+
 }
 
 module.exports = {OrderModel};

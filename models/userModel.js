@@ -7,17 +7,6 @@ class UserModel extends GeneralModel {
     console.log('construct user')
   }
 
-  async selectAll(){
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.query("SELECT * FROM users"));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage
-    }
-    return this.queryResult;
-  }
-
   async insert(content){
     // use a prepared statement to avoid SQL injection
     try{
@@ -40,19 +29,6 @@ class UserModel extends GeneralModel {
         'UPDATE users SET `name` = ?, `surname` = ?, `email` = ? WHERE `id` = ?', 
         [content.name ?? null, content.surname ?? null, content.email ?? null, id ]));
       }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult;
-  }
-
-  async delete(id){
-    // use a prepared statement to avoid SQL injection
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.execute(
-        'DELETE FROM users WHERE `id` = ?', [id]));
-    }
     catch(error){
       this.queryResult.error = error.sqlMessage;
     }

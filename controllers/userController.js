@@ -8,8 +8,8 @@ const um = new UserModel(dbConfig);
 const { GeneralController } = require('./generalController');
 
 class UserController extends GeneralController{
-  listUser = async (res) => {
-    const result = await um.selectAll();
+  listUsers = async (res) => {
+    const result = await um.selectAll('users');
     this.setCode(!result.error ? 200 : 403);
     this.setSuccess(!result.error);
     this.setContent(result.error ?? result.rows);
@@ -35,7 +35,7 @@ class UserController extends GeneralController{
 
   deleteUser = async (id, res) => {
     console.log('delete user : ', id);
-    const result = await um.delete(id);
+    const result = await um.delete(id, 'users');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
     this.setContent(result.rows.affectedRows>0 ? result.rows : "User not found");

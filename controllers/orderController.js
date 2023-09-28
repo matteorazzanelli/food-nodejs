@@ -11,7 +11,7 @@ class OrderController extends GeneralController{
 
   listOrders = async (res) => {
     console.log('list all orders');
-    const result = await om.selectAll();
+    const result = await om.selectAll('orders');
     this.setCode(!result.error ? 200 : 403);
     this.setSuccess(!result.error);
     this.setContent(result.error ?? result.rows);
@@ -38,10 +38,10 @@ class OrderController extends GeneralController{
 
   deleteOrder = async (id, res) => {
     console.log('delete order : ', id);
-    const result = await om.delete(id);
+    const result = await om.delete(id, 'orders');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
-    this.setContent(result.rows.affectedRows>0 ? result.rows : "Product not found");
+    this.setContent(result.rows.affectedRows>0 ? result.rows : "Order not found");
     return this.renderApi(res);
   }
 
