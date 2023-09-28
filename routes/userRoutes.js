@@ -9,7 +9,7 @@ router.use(express.json());
 
 router.get('/', (req, res)=>{
   console.log('get all users');
-  return userController.listUsers(req, res);
+  return userController.listUsers(res);
 })
 
 router.post('/', (req, res) => {
