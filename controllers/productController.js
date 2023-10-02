@@ -20,7 +20,7 @@ class ProductController extends GeneralController{
 
   insertProduct = async (content, res) => {
     console.log('add product');
-    const result = await pm.insert(content);
+    const result = await pm.insert(content, 'products');
     this.setCode(!result.error ? 201 : 400);
     this.setSuccess(!result.error);
     this.setContent(result.error ?? result.rows);
@@ -29,7 +29,7 @@ class ProductController extends GeneralController{
 
   modifyProduct = async (id, content, res) => {
     console.log('modify product : ', id);
-    const result = await pm.update(id, content);
+    const result = await pm.update(id, content, 'products');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
     this.setContent(result.rows.affectedRows>0 ? result.rows : "Product not found");

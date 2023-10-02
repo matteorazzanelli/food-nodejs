@@ -17,7 +17,7 @@ class UserController extends GeneralController{
   }
 
   insertUser = async (content, res) => {
-    const result = await um.insert(content);
+    const result = await um.insert(content, 'users');
     this.setCode(!result.error ? 201 : 400);
     this.setSuccess(!result.error);
     this.setContent(result.error ?? result.rows);
@@ -26,7 +26,7 @@ class UserController extends GeneralController{
 
   modifyUser = async (id, content, res) => {
     console.log('modify user : ', id);
-    const result = await um.update(id, content);
+    const result = await um.update(id, content, 'users');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
     this.setContent(result.rows.affectedRows>0 ? result.rows : "User not found");
