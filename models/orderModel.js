@@ -4,7 +4,7 @@ class OrderModel extends GeneralModel {
 
   constructor(connection){
     super(connection);
-    console.log('construct order')
+    console.log('order model')
   }
 
   async insert(content){
@@ -17,8 +17,6 @@ class OrderModel extends GeneralModel {
       this.queryResult.error = "Foreign key does not exist.";
       return this.queryResult;
     }
-    
-    
     try{
       // let's add the order record with date
       // FIXME: this.queryResult should be the result of the entire operation
@@ -48,19 +46,11 @@ class OrderModel extends GeneralModel {
   }
 
   async update(id, content){
-    // use a prepared statement to avoid SQL injection
-    try{
-      [this.queryResult.rows, this.queryResult.fields] = 
-        (await this.connection.execute(
-        'UPDATE products SET `name` = ? WHERE `id` = ?', [content, id]));
-    }
-    catch(error){
-      this.queryResult.error = error.sqlMessage;
-    }
-    return this.queryResult;
+    // first delete from the table
+    let result = (await this.delete(id, 'orders'));
+    // then add products as new ones
+    return (await this.insert(content));
   }
-
-
 }
 
 module.exports = {OrderModel};

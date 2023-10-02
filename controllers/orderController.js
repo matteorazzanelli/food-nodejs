@@ -29,7 +29,7 @@ class OrderController extends GeneralController{
 
   modifyOrder = async (id, content, res) => {
     console.log('modify order : ', id);
-    const result = await om.update(id, content);
+    const result = await om.update(id, content, 'orders');
     this.setCode(result.rows.affectedRows>0 ? 200 : 404);
     this.setSuccess(result.rows.affectedRows>0);
     this.setContent(result.rows.affectedRows>0 ? result.rows : "Product not found");
