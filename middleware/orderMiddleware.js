@@ -26,24 +26,22 @@ const insertOrderMiddleware = (controller) => {
 const filterOrderMiddleware = (controller) => {
   return (req, res, next) => {
     const {from, to, products} = req.query;
-    if(!from || isNaN(new Date(from))){
+    if(from && isNaN(new Date(from))){ // if exists but is malformed
       controller.setCode(400); // bad request
       controller.setSuccess(false);
       controller.setContent("Provide a valid 'from' date field.");
       return controller.renderApi(res);
     }
-    if(!to || isNaN(new Date(to))){
+    if(to && isNaN(new Date(to))){
       controller.setCode(400); // bad request
       controller.setSuccess(false);
       controller.setContent("Provide a valid 'to' date field.");
       return controller.renderApi(res);
     }
-    if(!products || !products.length>0){
-      controller.setCode(400); // bad request
-      controller.setSuccess(false);
-      controller.setContent("Provide a valid set of products.");
-      return controller.renderApi(res);
-    }
+    // make variable accessible from the external
+    res.locals.from = new Date(from ? from : '1753-1-1')
+    res.locals.to = new Date(to ? to : new Date(Date.now()))
+    res.locals.products = products ? products.split(',') : ['']; //from string to array
     next();
   }
 
