@@ -45,6 +45,15 @@ class OrderController extends GeneralController{
     return this.renderApi(res);
   }
 
+  filterOrder = async (from, to, products, res) => {
+    console.log('filter order : ', from, to, products);
+    const result = await om.filter(from, to, products);
+    this.setCode(!result.error ? 200 : 403);
+    this.setSuccess(!result.error);
+    this.setContent(result.error ?? result.rows);
+    return this.renderApi(res);
+  }
+
 }
 
 const orderController = new OrderController();

@@ -51,6 +51,11 @@ class OrderModel extends GeneralModel {
     // then add products as new ones
     return (await this.insert(content));
   }
+
+  async filter(from, to, products){
+    console.log('inside model : ', from, to, products)
+    return this.queryResult;
+  }
 }
 
 module.exports = {OrderModel};

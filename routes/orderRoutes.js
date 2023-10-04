@@ -31,4 +31,12 @@ router.delete('/:id', (req,res) => {
   return orderController.deleteOrder(id, res);
 })
 
+router.get('/filter', filterOrderMiddleware(orderController), (req, res) => {
+  // You can filter by date or products
+  const {from, to, products} = req.query;
+  // localhost:3000/orders/filter?from=2025-12-12&to=2025-12-20&products=1,2,3
+  return orderController.filterOrder(from, to, products.split(','), res);
+  // return res.status(200).json({success: true, from: from, to: to, products: products.split(',')});
+})
+
 module.exports = router;
