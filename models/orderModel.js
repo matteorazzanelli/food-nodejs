@@ -53,7 +53,38 @@ class OrderModel extends GeneralModel {
   }
 
   async filter(from, to, products){
-    console.log('inside model : ', from, to, products)
+    // TODO: we want to reproduce a query like this
+    // SELECT DISTINCT * FROM ( 
+    // SELECT orders_products.id_order as idOrder FROM orders_products 
+    // INNER JOIN products ON products.id = orders_products.id_product 
+    // WHERE orders_products.id_product=1 OR orders_products.id_product=2 
+    // ) r 
+    // INNER JOIN orders as o ON r.idOrder=o.id 
+    // AND o.date BETWEEN '1990-01-01' AND '2025-01-01'
+
+    const values = products.concat(from, to);
+    let whereClauseStr = '';
+    if(products.length > 0){
+      let whereClause = products.map((item)=>{return 'orders_products.id_product=?'});
+      whereClauseStr = 'WHERE '+whereClause.join(' OR ');
+    }
+    
+    
+    let query = `SELECT DISTINCT * FROM ( 
+      SELECT orders_products.id_order AS idOrder FROM orders_products 
+      INNER JOIN products ON products.id = orders_products.id_product 
+      ${whereClauseStr}
+      ) r 
+      INNER JOIN orders AS o ON r.idOrder=o.id 
+      AND o.date BETWEEN ? AND ?`;
+    
+    try{
+      [this.queryResult.rows, this.queryResult.fields] = 
+        (await this.connection.execute(query, values));
+    }
+    catch(error){
+      this.queryResult.error = error.sqlMessage;
+    }
     return this.queryResult;
   }
 }
