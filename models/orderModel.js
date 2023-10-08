@@ -86,7 +86,7 @@ class OrderModel extends GeneralModel {
     catch(error){
       this.queryResult.error = error.sqlMessage;
     }
-    console.log(query)
+    // console.log(query)
     return this.queryResult;
   }
 }
