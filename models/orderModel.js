@@ -62,15 +62,16 @@ class OrderModel extends GeneralModel {
     // INNER JOIN orders as o ON r.idOrder=o.id 
     // AND o.date BETWEEN '1990-01-01' AND '2025-01-01'
 
-    const values = products.concat(from, to);
+    const values = products ? products.concat(from,to) : Array.prototype.concat(from, to);
+    console.log(values, products, products)
     let whereClauseStr = '';
-    if(products.length > 0){
+    if(products){
       let whereClause = products.map((item)=>{return 'orders_products.id_product=?'});
       whereClauseStr = 'WHERE '+whereClause.join(' OR ');
     }
     
     
-    let query = `SELECT DISTINCT * FROM ( 
+    let query = `SELECT DISTINCT id,date FROM ( 
       SELECT orders_products.id_order AS idOrder FROM orders_products 
       INNER JOIN products ON products.id = orders_products.id_product 
       ${whereClauseStr}
@@ -85,6 +86,7 @@ class OrderModel extends GeneralModel {
     catch(error){
       this.queryResult.error = error.sqlMessage;
     }
+    console.log(query)
     return this.queryResult;
   }
 }

@@ -41,7 +41,7 @@ const filterOrderMiddleware = (controller) => {
     // make variable accessible from the external
     res.locals.from = new Date(from ? from : '1753-1-1')
     res.locals.to = new Date(to ? to : new Date(Date.now()))
-    res.locals.products = products ? products.split(',') : ['']; //from string to array
+    res.locals.products = products ? products.split(',') : undefined; //from string to array
     next();
   }
 
